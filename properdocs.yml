@@ -9,6 +9,9 @@ extra:
 nav:
   - Home: index.md
   - About: about.md
+  - Decisions:
+      - '0000': decisions/0000-use-markdown-architectural-decision-records.md
+      - '0001': decisions/0001-use-properdocs-site-generator.md
 draft_docs: |
   _runbook/
   .draft.md
