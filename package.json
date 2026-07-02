@@ -1,0 +1,12 @@
+{
+    "name": "ramda-doc",
+    "version": "1.0.0",
+    "private": true,
+    "workspaces": ["vendor/*"],
+    "scripts": {
+        "build": "properdocs build",
+        "publish": "properdocs gh-deploy",
+        "serve": "properdocs serve",
+        "postinstall": "rm -rf node_modules"
+    }
+}

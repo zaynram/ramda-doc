@@ -1,0 +1,16 @@
+{
+  "lockfileVersion": 2,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "ramda-doc",
+    },
+    "vendor/madr": {
+      "name": "madr",
+      "version": "4.0.0",
+    },
+  },
+  "packages": {
+    "madr": ["madr@workspace:vendor/madr"],
+  }
+}
