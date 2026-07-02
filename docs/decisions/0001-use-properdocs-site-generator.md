@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: proposed
 edited: 2026-07-02
 decided_by: Zayn Ramdass
 consulted: claude-sonnet-5
