@@ -1,6 +1,6 @@
 # Welcome to MkDocs
 
-For full documentation visit [properdocs.org](https://www.properdocs.org).
+For full documentation visit [properdocs.org](https://properdocs.org/).
 
 ## Commands
 
