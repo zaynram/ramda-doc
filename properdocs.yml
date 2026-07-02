@@ -33,5 +33,6 @@ markdown_extensions:
   - toc:
       permalink: true
 plugins:
+  - search
   - excalidraw
   - d2
