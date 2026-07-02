@@ -20,20 +20,21 @@ We want the documentation to be accessible to external audiences independent whe
 
 ## Considered Options
 
-* freeform (nothing)
+* nothing (no accessible layer)
+* manually authored (i.e. GitBook, Notion, etc.)
 * `mkdocs` (ssg)
 * `properdocs` (ssg)
 * `zensical` (ssg)
 
 ## Decision Outcome
 
-Chosen option: **`properdocs`** (ssg), because static site generation is the only practical approach for solo-maintenance and `mkdocs` has entered maintenance mode since March 2026, with `zensical` being a much younger candidate that does not have enough available at this stage to warrant adoption. Additionally selected is the **`mkdocstring`** plugin as it's compatible with all SSG candidates conaidered and is the only documentation generation plugin that is language agnostic.
+Chosen option: **`properdocs`** (ssg), because static site generation is the only practical approach for solo-maintenance compared to manual authoring and `zensical` is a much younger candidate that does not have enough available at this stage to warrant adoption. The original `mkdocs` team has fractured after disagreements over the future of the project, so it was dropped from consideration due to the need for active maintenance.
 
 ### Consequences
 
-* Good, because `properdocs` and `zeniscal` are succesors to the original `mkdocs` project and provide backwards-compatibility.
-* Good, becase we can revisit `zeniscal` later down the line when the ecosystem has matured or the need otherwise arises.
-* Bad, because ProperDocs has less momentum and less available support creating a longevity concern.
+* Good, because `properdocs` and `zeniscal` are tied to the original `mkdocs` project and provide at least some degree of backwards-compatibility.
+* Good, becase we can reconsider `zeniscal` later down the line when the ecosystem has matured or the need otherwise arises.
+* Bad, because `properdocs` has less momentum and less active support creating a longevity concern.
 
 ### Confirmation
 
