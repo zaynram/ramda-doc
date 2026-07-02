@@ -1,0 +1,1 @@
+[![pages-build-deployment](https://github.com/zaynram/ramda-doc/actions/workflows/pages/pages-build-deployment/badge.svg?branch=gh-pages)](https://github.com/zaynram/ramda-doc/actions/workflows/pages/pages-build-deployment)
