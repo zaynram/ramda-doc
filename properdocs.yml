@@ -1,0 +1,38 @@
+site_name: ramda-doc
+site_author: Zayn Ramdass
+theme: shadcn
+repo_url: https://github.com/zaynram/ramda-doc
+repo_name: ''
+strict: true
+extra:
+  version: 1.0
+nav:
+  - Home: index.md
+  - About: about.md
+draft_docs: |
+  _runbook/
+  .draft.md
+exclude_docs: |
+  internal/
+  /private.md
+validation:
+  omitted_files: warn
+  absolute_links: relative_to_docs
+  unrecognized_links: warn
+  anchors: warn
+markdown_extensions:
+  - smarty
+  - sane_lists
+  - admonition
+  - footnotes
+  - fenced_code
+  - shadcn.extensions.echarts.alpha
+  - shadcn.extensions.iconify
+  - shadcn.extensions.codexec
+  - codehilite
+  - toc:
+      permalink: true
+plugins:
+  - search
+  - excalidraw
+  - d2

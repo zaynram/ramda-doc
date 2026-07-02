@@ -1,0 +1,23 @@
+settings:
+  apply_change_on_focus_change: true
+  auto_placeholder_tables: true
+  create_no_js_fallback: true
+  debug_javascript: false
+  dynamic_prefix: d
+  dynamic_suffix: d
+  editable_prefix: e
+  editable_suffix: e
+  expand_auto_tables: true
+  html_prefix_optional: "x-placeholder-link://"
+  html_prefix: i
+  html_suffix: i
+  inline_editors: true
+  inline_editor_style: simple
+  normal_is_alias_for: editable
+  normal_prefix: x
+  normal_suffix: x
+  replace_delay_millis: 0
+  show_warnings: true
+  static_prefix: s
+  static_suffix: s
+placeholders: {}

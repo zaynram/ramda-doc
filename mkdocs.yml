@@ -1,5 +1,0 @@
-site_name: ramda-doc
-nav:
-  - Home: index.md
-  - About: about.md
-theme: shadcn
