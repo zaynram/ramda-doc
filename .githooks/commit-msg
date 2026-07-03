@@ -1,0 +1,58 @@
+#!/usr/bin/env nu
+# ADR immutability guard (ADR-0000 amendments, 2026-07-02).
+#
+# Blocks commits that modify or delete a frozen record:
+#   frozen = tracked in HEAD under docs/decisions/ with `status: accepted`.
+# Permitted mutations:
+#   * staged status transitions to `superseded by ADR-XXXX`
+#   * commit message contains the `[adr-amend]` override token
+#   * files carrying the `.draft.md` suffix (mutable phase)
+#
+# Install: save as .githooks/commit-msg, mark executable, then
+#   git config core.hooksPath .githooks
+# Note: `--no-renames` is deliberate; it decomposes renames of frozen
+# records into delete + add so the delete is caught.
+
+# Extract `status` from YAML frontmatter only (ignores body occurrences).
+def frontmatter-status [content: string] {
+    let doc = ($content | lines)
+    if ($doc | is-empty) or (($doc.0 | str trim) != '---') { return '' }
+    let hits = (
+        $doc
+        | skip 1
+        | take while {|line| ($line | str trim) != '---' }
+        | where {|line| ($line | str trim | str starts-with 'status:') }
+    )
+    if ($hits | is-empty) { return '' }
+    $hits.0 | str replace -r '^\s*status:\s*' '' | str trim
+}
+
+# Status of the committed (HEAD) version; '' when file is new to HEAD.
+def head-status [file: string] {
+    try { frontmatter-status (git show $"HEAD:($file)") } catch { '' }
+}
+
+# Status of the staged (index) version; '' when staged for deletion.
+def index-status [file: string] {
+    try { frontmatter-status (git show $":($file)") } catch { '' }
+}
+
+def main [msg_file: path] {
+    if (open --raw $msg_file | str contains '[adr-amend]') { exit 0 }
+
+    let violations = (
+        git diff --cached --name-only --no-renames --diff-filter=ACDMR
+        | lines
+        | where {|f| $f =~ '^docs/decisions/.+\.md$' }
+        | where {|f| not ($f | str ends-with '.draft.md') }
+        | where {|f| (head-status $f) == 'accepted' }
+        | where {|f| not ((index-status $f) | str starts-with 'superseded') }
+    )
+
+    if ($violations | is-not-empty) {
+        print -e "commit blocked: frozen ADR modified (ADR-0000 immutability)"
+        $violations | each {|f| print -e $"  ($f)" }
+        print -e "resolve via superseding ADR, or include [adr-amend] in the commit message"
+        exit 1
+    }
+}

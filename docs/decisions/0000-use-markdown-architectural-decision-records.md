@@ -1,4 +1,10 @@
-# Use Markdown Architectural Decision Records
+---
+title: Use MADR
+status: accepted
+date: 2026-07-02
+decision-makers: [{ name: Zayn Ramdass, email: ramdasszayn@gmail.com }]
+consulted: [claude-sonnet-5, claude-fable-5]
+---
 
 ## Context and Problem Statement
 
@@ -24,3 +30,20 @@ Chosen option: "MADR 4.0.0", because
 * The MADR format is lean and fits our development style.
 * The MADR structure is comprehensible and facilitates usage & maintenance.
 * The MADR project is vivid.
+
+---
+
+## Amendments
+
+### 2026-07-02: Record Immutability
+
+An ADR is frozen upon merging to `main` with `status: accepted`.
+After freezing, the record may only change by:
+
+* a superseding ADR (status transition to `superseded by ADR-XXXX`), or
+* an explicit override: a commit whose message contains `[adr-amend]`,
+  reserved for corrections that do not alter the decision or its rationale.
+
+Enforcement: a committed git hook (activated via `core.hooksPath`,
+see setup script) blocks commits modifying accepted records absent the
+override token. Files carrying a `.draft.md` suffix are exempt (mutable phase).
