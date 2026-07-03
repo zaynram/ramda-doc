@@ -6,7 +6,8 @@
     "scripts": {
         "build": "properdocs build",
         "publish": "properdocs gh-deploy",
-        "serve": "properdocs serve",
-        "postinstall": "rm -rf node_modules"
+        "postinstall": "rm -rf node_modules",
+        "serve": "properdocs serve --open",
+        "setup": "./scripts/setup.nu"
     }
 }

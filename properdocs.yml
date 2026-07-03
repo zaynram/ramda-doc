@@ -11,13 +11,13 @@ nav:
   - About: about.md
   - Decisions:
       - '0000': decisions/0000-use-markdown-architectural-decision-records.md
-      - '0001': decisions/0001-use-properdocs-site-generator.md
+      - '0001': decisions/0001-use-properdocs-static-site-generator.md
 draft_docs: |
   _runbook/
-  .draft.md
+  *.draft.md
 exclude_docs: |
-  internal/
-  /private.md
+  /requirements.txt
+  /internal/
 validation:
   omitted_files: warn
   absolute_links: relative_to_docs
