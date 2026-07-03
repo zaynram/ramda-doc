@@ -4,10 +4,12 @@
     "private": true,
     "workspaces": ["vendor/*"],
     "scripts": {
+        "serve": "properdocs serve --open",
         "build": "properdocs build",
         "publish": "properdocs gh-deploy",
-        "postinstall": "rm -rf node_modules",
-        "serve": "properdocs serve --open",
-        "setup": "./scripts/setup.nu"
+        "setup": "./scripts/setup.nu",
+        "setup:all": "./scripts/setup.nu --fetch-d2 true",
+        "setup:d2": "./scripts/setup.nu fetch-d2",
+        "postinstall": "rm -rf node_modules && bun setup || true"
     }
 }
