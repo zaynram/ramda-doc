@@ -15,5 +15,5 @@ Published at <https://zaynram.github.io/ramda-doc/>.
 
 ## Usage
 
-- `nu scripts/setup.nu` - arms the git hooks and synchronizes the local toolchain (requires `nu` and `pipx`).
+- `nu scripts/setup.nu` - arms the git hooks and synchronizes the local toolchain (requires `nu` and `pipx`). also exposes opt-in d2 installation flow with version pin.
 - `bun run serve` / `bun run build` / `bun run publish` - preview, strict build, and deploy.
