@@ -7,9 +7,9 @@
         "serve": "properdocs serve --open",
         "build": "properdocs build",
         "publish": "properdocs gh-deploy",
-        "setup": "./scripts/setup.nu",
-        "setup:all": "./scripts/setup.nu --fetch-d2 true",
-        "setup:d2": "./scripts/setup.nu fetch-d2",
+        "setup": "./scripts/setup/main.nu",
+        "setup:all": "./scripts/setup/main.nu 'git-hooks' 'site-gen' 'fetch-d2'",
+        "setup:d2": "./scripts/setup/main.nu fetch-d2",
         "postinstall": "rm -rf node_modules && bun setup || true"
     }
 }
