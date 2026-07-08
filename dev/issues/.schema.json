@@ -1,0 +1,323 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://zaynram.github.io/ramda-doc/schemas/problem-awareness.schema.json",
+    "definitions": {
+        "synopsis": {
+            "type": "string",
+            "minLength": 50,
+            "maxLength": 250,
+            "description": "Medium length prose description/overview."
+        },
+        "string[]": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Array of string values."
+        },
+        "tag": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 50,
+            "description": "Shorthand string reference."
+        },
+        "location": {
+            "type": "object",
+            "description": "Specifications for a path item, as either a full path string or an object of its parts.",
+            "oneOf": [
+                {
+                    "required": ["uri"],
+                    "properties": {
+                        "uri": {
+                            "type": "string",
+                            "format": "uri",
+                            "description": "The full URI specification of the item."
+                        }
+                    }
+                },
+                {
+                    "required": ["path", "type"],
+                    "properties": {
+                        "path": {
+                            "type": "string",
+                            "format": "path",
+                            "description": "Full path of a required path item."
+                        },
+                        "type": {
+                            "enum": ["file", "directory"],
+                            "description": "The type of this path item."
+                        }
+                    }
+                },
+                {
+                    "required": ["extension", "parent"],
+                    "properties": {
+                        "stem": {
+                            "type": "string",
+                            "description": "The name of the path item, without its file extension (if applicable)."
+                        },
+                        "extension": {
+                            "type": "string",
+                            "description": "The extension of the path item."
+                        },
+                        "parent": {
+                            "type": "string",
+                            "format": "path",
+                            "description": "The directory that this path item will be housed in."
+                        }
+                    }
+                }
+            ]
+        },
+        "artifact": {
+            "type": "object",
+            "required": ["location"],
+            "properties": {
+                "alias": {
+                    "$ref": "#/definitions/tag",
+                    "description": "Shorthand reference label for this artifact."
+                },
+                "location": {
+                    "$ref": "#/definitions/location",
+                    "description": "The location specification for this artifact."
+                },
+                "purpose": {
+                    "$ref": "#/definitions/synopsis",
+                    "description": "The reason for this artifact's existence."
+                }
+            }
+        }
+    },
+    "title": "Problem Awareness",
+    "description": "Vision and value definition for a work item, articulated prior to any decision or implementation work.",
+    "type": "object",
+    "properties": {
+        "issue": {
+            "type": "object",
+            "required": ["slug", "date", "status", "vision", "outlook"],
+            "additionalProperties": false,
+            "properties": {
+                "extends": {
+                    "type": "array",
+                    "description": "An array of the paths to separate issues that are relevant to this issue. Relevance includes, but is not limited to, lineage (e.g. redefinition from hitting an `xabort`) and contextual overlap (e.g. shared components, prior art).",
+                    "items": { "type": "string", "format": "path" },
+                    "minItems": 1
+                },
+                "name": {
+                    "$ref": "#/definitions/tag",
+                    "description": "Short, human-friendly label for this issue."
+                },
+                "slug": {
+                    "$ref": "#/definitions/tag",
+                    "description": "Simple, machine-friendly descriptor for this issue."
+                },
+                "date": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Date of last modification, formatted as ISO 8601 (YYYY-MM-DD)."
+                },
+                "status": {
+                    "description": "The status of this issue.",
+                    "enum": ["draft", "open", "aborted", "completed"],
+                    "default": "draft"
+                },
+                "vision": {
+                    "type": "object",
+                    "required": [
+                        "output",
+                        "criteria",
+                        "baseline",
+                        "landscape",
+                        "outcome",
+                        "scope"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "output": {
+                            "description": "The artifact(s) or format the outcome must take.",
+                            "oneOf": [
+                                {
+                                    "type": "string",
+                                    "description": "Prose detailing the deliverables for this issue.",
+                                    "minLength": 100
+                                },
+                                { "$ref": "#/definitions/artifact" },
+                                {
+                                    "type": "array",
+                                    "items": { "$ref": "#/definitions/artifact" },
+                                    "description": "Array of output artifact specifications."
+                                }
+                            ]
+                        },
+                        "criteria": {
+                            "type": "object",
+                            "description": "The discrete elements or dimensions that each require individual resolution. Every listed item must be satisfied for an outcome to be valid.",
+                            "additionalProperties": true,
+                            "properties": {
+                                "requirements": {
+                                    "$ref": "#/definitions/string[]",
+                                    "description": "An array of prose descriptions of distinct requirements for the issue's satisfaction."
+                                },
+                                "constraints": {
+                                    "$ref": "#/definitions/string[]",
+                                    "description": "An array of prose descriptions of constraints that this issue's satisfaction must operate under."
+                                }
+                            }
+                        },
+                        "baseline": {
+                            "type": "object",
+                            "description": "What already exists, or doesn't, that bounds or frees the work. Greenfield (clean) and brownfield (contaminated/built-up) are the two poles.",
+                            "required": ["green"],
+                            "properties": {
+                                "green": {
+                                    "type": "array",
+                                    "items": { "$ref": "#/definitions/synopsis" },
+                                    "description": "What doesn't exist in any prior state and must be developed from scratch (greenfield), each as a brief synopsis of the relevant surface."
+                                },
+                                "brown": {
+                                    "type": "array",
+                                    "description": "What previously exists from a prior state that must be redeveloped for this issue (brownfield).",
+                                    "items": {
+                                        "type": "object",
+                                        "required": [
+                                            "synopsis",
+                                            "reference",
+                                            "incompatibility"
+                                        ],
+                                        "properties": {
+                                            "synopsis": {
+                                                "$ref": "#/definitions/artifact",
+                                                "description": "Brief description of this item's surface."
+                                            },
+                                            "reference": {
+                                                "oneOf": [
+                                                    {
+                                                        "$ref": "#/definitions/tag",
+                                                        "description": "The location of the surface's prior state existence in the local filesystem."
+                                                    },
+                                                    {
+                                                        "type": "string",
+                                                        "description": "Detailed description of this surface's prior state existence (for cases where location may not be reasonably specified).",
+                                                        "minLength": 100
+                                                    }
+                                                ],
+                                                "description": "Path or descriptive reference of this surface's prior state existence (where it can be found)."
+                                            },
+                                            "incompatibility": {
+                                                "type": "string",
+                                                "description": "Why the existing implementation does not fit the issue's criteria for this surface. Describe what needs to change before this issue can be satisfied.",
+                                                "minLength": 50
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "landscape": {
+                            "type": "string",
+                            "description": "The external state of available options or precedent, and whatever gap or limitation persists regardless of what eventually gets chosen.",
+                            "minLength": 50
+                        },
+                        "outcome": {
+                            "description": "Whether the required outcome is singular or compound.",
+                            "default": "singular",
+                            "oneOf": [
+                                { "type": "string", "const": "singular" },
+                                {
+                                    "type": "object",
+                                    "required": ["mode", "threads"],
+                                    "properties": {
+                                        "mode": {
+                                            "enum": ["compound"],
+                                            "description": "Whether the required outcome is singular or compound."
+                                        },
+                                        "threads": {
+                                            "$ref": "#/definitions/string[]",
+                                            "description": "What must hold consistently across all parts of the outcome requirement(s).",
+                                            "minItems": 1,
+                                            "default": []
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        "scope": {
+                            "type": "object",
+                            "required": ["excluded", "deferred"],
+                            "properties": {
+                                "excluded": {
+                                    "$ref": "#/definitions/string[]",
+                                    "minItems": 1,
+                                    "default": [],
+                                    "description": "What's explicitly excluded from this and any anticipated future scopes."
+                                },
+                                "deferred": {
+                                    "description": "What's explicitly excluded from this scope, but requires resolution in a future scope.",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "required": ["label", "target"],
+                                        "properties": {
+                                            "label": {
+                                                "type": "string",
+                                                "description": "Short descriptor for this scope item."
+                                            },
+                                            "target": {
+                                                "type": "string",
+                                                "description": "What this item's target scope (when it will be addressed)."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "outlook": {
+                    "type": "object",
+                    "properties": {
+                        "xabort": {
+                            "type": "object",
+                            "description": "Mapping of labels to prose descriptions for anticipated situations in which this issue will no longer be viable to purse. Serves as a trigger index for the development work to refer to should complications arise.",
+                            "additionalProperties": true,
+                            "properties": {
+                                "mode": {
+                                    "enum": ["abort", "reevaluate"],
+                                    "description": "Whether the condition's satisfaction should immediately close this issue or if it should be redefined in a new issue.",
+                                    "default": "abort"
+                                }
+                            }
+                        },
+                        "xvalue": {
+                            "type": "array",
+                            "description": "Expected value; motivating reasons this work item matters. While most work benefits from surfacing two or more distinct angles, only one is explicitly required.",
+                            "minItems": 1,
+                            "default": [],
+                            "items": {
+                                "type": "object",
+                                "required": ["category", "statement"],
+                                "additionalProperties": false,
+                                "properties": {
+                                    "category": {
+                                        "$ref": "#/definitions/tag",
+                                        "description": "The kind of value this entry expresses, as a concise tag.\nExamples (with definitions):\n* effort-leverage - recurring cost removed, amplified by the absence of other structure to absorb it\n* gap-closure - an absence resolved that persists specifically because of your own context, not a general market gap\n* practice-fidelity - tracks what is actually practiced or used, not an idealized preference\n* precomputed-context - prepackages something that would otherwise require costly or incomplete ad hoc reconstruction.\nAny other string is accepted if none of these fit.",
+                                        "examples": [
+                                            "effort-leverage",
+                                            "gap-closure",
+                                            "practice-fidelity",
+                                            "precomputed-context"
+                                        ]
+                                    },
+                                    "statement": {
+                                        "type": "string",
+                                        "minLength": 50,
+                                        "maxLength": 500,
+                                        "description": "The concrete value statement itself."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

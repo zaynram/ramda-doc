@@ -1,0 +1,23 @@
+[problem]
+    name = '{Simple kebab-case descriptor slug}'
+    date = '{Date of the last modification of problem substance}'
+
+    [problem.vision]
+        output-form          = '{The artifact or format the outcome must take, when that form is fixed by prior convention rather than being a variable of this effort.}'
+        requirement-surface  = "{The discrete elements or dimensions that each require individual resolution. Silence on any one of them isn't a valid outcome.}"
+        starting-conditions  = "{What already exists, or doesn't, that bounds or frees the work. Greenfield and constrained-by-prior-state are the two poles.}"
+        landscape-assessment = '{The external state of available options or precedent, and whatever gap or limitation persists regardless of what eventually gets chosen.}'
+        resolution-shape     = '{Whether the required outcome is singular or compound, and, if compound, what must hold consistently across its parts.}'
+        scope-boundary       = "{What's explicitly excluded from this effort, and where that excluded concern is meant to be addressed instead.}"
+
+    [[problem.value]]
+        effort-leverage = '{Value proportional to recurring cost removed, amplified by the absence of other people or structure that would otherwise absorb it.}'
+
+    [[problem.value]]
+        gap-closure = '{Value from resolving an absence that persists specifically because of your own particular context, not a general market-wide gap.}'
+
+    [[problem.value]]
+        practice-fidelity = '{Value or requirements that track what is actually practiced or used, rather than an idealized preference. A pragmatic exception earns the same standing as a preferred choice.}'
+
+    [[problem.value]]
+        precomputed-context = "{Value from prepackaging something that would otherwise require costly or incomplete ad hoc reconstruction each time it's needed.}"

@@ -1,0 +1,71 @@
+#:schema .schema.json
+
+[issue]
+    slug   = 'adr-0002-polyglot-reference-doc-tooling'
+    date   = 2026-07-06
+    status = 'open'
+
+    [issue.vision]
+        landscape = 'The pool of third-party implementations is small. Three were surveyed: mkdocstrings offers real but stratified per-language coverage, fir achieves genericness through shallow comment-block extraction rather than semantic parsing, and waygrounddocgen achieves genericness by outsourcing extraction to an AI coding agent rather than building language understanding. Each is individually insufficient for the full inventory.'
+
+        [issue.vision.criteria]
+            requirements = [
+                'Stated acceptance/refusal of framework adoption, with supporting rationale.'
+            ]
+
+            [issue.vision.criteria.language-support]
+                inventory = [
+                    'python',
+                    'typescript',
+                    'javascript',
+                    'rust',
+                    'nushell',
+                    'posix'
+                ]
+                mechanism = 'Every language requires an explicit generation mechanism.'
+
+        [issue.vision.output]
+            alias   = 'ADR-0002'
+            purpose = 'Polyglot reference generation decision, recorded in MADR format.'
+
+            [issue.vision.output.location]
+                path = 'docs/decisions/0002-language-agnostic-reference-generation.draft.md'
+                type = 'file'
+
+        [issue.vision.outcome]
+            mode    = 'compound'
+            threads = [
+                'definite stance on framework adoption',
+                'per-language generation mechanism(s)'
+            ]
+
+        [issue.vision.scope]
+            excluded = []
+            deferred = [
+                { label = 'Output composition', target = 'ADR-0003' },
+                { label = 'Central indexing', target = 'ADR-0003' },
+            ]
+
+        [issue.vision.baseline]
+            green = [ 'Language-agnostic reference documentation generation.' ]
+
+    [issue.outlook]
+        [[issue.outlook.xvalue]]
+            category  = 'effort-leverage'
+            statement = 'Centralizes reference-documentation generation across every project a solo maintainer is responsible for, removing a recurring cost with no team to otherwise absorb it.'
+
+        [[issue.outlook.xvalue]]
+            category  = 'gap-closure'
+            statement = 'Closes a documentation-tooling gap specific to Nushell, whose ecosystem immaturity leaves no comparable existing solution for a shell language central to my own daily work.'
+
+        [[issue.outlook.xvalue]]
+            category  = 'precomputed-context'
+            statement = 'Aggregated documentation across my Nushell modules and scripts becomes structured reference for both myself and for LLMs operating through my Nushell MCP implementation.'
+
+        [[issue.outlook.xvalue]]
+            category  = 'practice-fidelity'
+            statement = 'TypeScript is my preferred language, but Claude-facing tooling is often written in vanilla JavaScript for portability; the requirement must track that practical reality rather than the stated preference alone.'
+
+        [[issue.outlook.xvalue]]
+            category  = 'precomputed-context'
+            statement = 'Generated documentation serves as reference for both myself and Claude, particularly for cross-project work where equivalent synthesis through ad hoc exploration would be costly and potentially incomplete.'
