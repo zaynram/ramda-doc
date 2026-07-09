@@ -8,16 +8,22 @@ extra:
   version: 1.0
 nav:
   - Home: index.md
-  - About: about.md
+  - Issues:
+      - '#1': issues/polyglot-reference-autodoc-tooling.issue.md
   - Decisions:
       - '0000': decisions/0000-use-markdown-architectural-decision-records.md
       - '0001': decisions/0001-use-properdocs-static-site-generator.md
+      - '0002': decisions/0002-language-agnostic-reference-generation.draft.md
 draft_docs: |
   _runbook/
   *.draft.md
 exclude_docs: |
-  /requirements.txt
-  /internal/
+  requirements.txt
+  internal/
+  *.toml
+not_in_nav: |
+  schema/
+  *.schema.json
 validation:
   omitted_files: warn
   absolute_links: relative_to_docs
@@ -32,7 +38,9 @@ markdown_extensions:
   - shadcn.extensions.echarts.alpha
   - shadcn.extensions.iconify
   - shadcn.extensions.codexec
-  - codehilite
+  - codehilite:
+      linenums: true
+      use_pygments: true
   - toc:
       permalink: true
 plugins:
