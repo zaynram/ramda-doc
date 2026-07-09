@@ -8,12 +8,9 @@ extra:
   version: 1.0
 nav:
   - Home: index.md
-  - Issues:
-      - '#1': issues/polyglot-reference-autodoc-tooling.issue.md
   - Decisions:
       - '0000': decisions/0000-use-markdown-architectural-decision-records.md
       - '0001': decisions/0001-use-properdocs-static-site-generator.md
-      - '0002': decisions/0002-language-agnostic-reference-generation.draft.md
 draft_docs: |
   _runbook/
   *.draft.md
