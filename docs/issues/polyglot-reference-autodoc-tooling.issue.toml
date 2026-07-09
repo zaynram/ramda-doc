@@ -11,7 +11,7 @@
 
     [issue.reference]
         index  = 1
-        branch = 'write-adr-0002'
+        branch = 'issue-1'
         url    = 'https://github.com/zaynram/ramda-doc/issues/1'
 
     [issue.vision]
