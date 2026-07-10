@@ -13,8 +13,8 @@
                     "additionalProperties": false,
                     "required": [
                         "version",
+                        "name",
                         "slug",
-                        "date",
                         "status",
                         "vision",
                         "bindings",
@@ -40,7 +40,7 @@
                         "reference": {
                             "type": "object",
                             "description": "Specification of the remote issue corresponding to this file.",
-                            "required": ["index"],
+                            "required": ["index", "url"],
                             "properties": {
                                 "index": {
                                     "type": "number",
@@ -350,8 +350,8 @@
         },
         "identifier": {
             "description": "Short string containing only alphanumeric characters and a limited set of separator characters ('_', '-', ':').",
-            "maxLength": 35,
-            "pattern": "^[A-Za-z0-9_-:]+"
+            "maxLength": 40,
+            "pattern": "[\\w#@+:-]+"
         },
         "statement": {
             "description": "One or two sentences providing a brief description.",
