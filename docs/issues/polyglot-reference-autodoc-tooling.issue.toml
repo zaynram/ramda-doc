@@ -1,105 +1,87 @@
-#:schema https://zaynram.github.io/ramda-doc/schema/issue.schema.json
-#:tombi toml-version = 'v1.1.0'
-#:tombi schema.strict = true
-
 [issue]
-    version = '2.0.0'
-    name    = 'Write ADR-0002'
-    slug    = 'polyglot-reference-autodoc-tooling'
-    date    = 2026-07-06
-    status  = 'open'
+  version = '2.0.0'
+  name    = 'Write ADR-0002'
+  slug    = 'polyglot-reference-autodoc-tooling'
+  date    = 2026-07-09T03:44:26.0+00:00
+  status  = 'open'
 
-    [issue.reference]
-        index  = 1
-        branch = 'issue-1'
-        url    = 'https://github.com/zaynram/ramda-doc/issues/1'
+  [issue.reference]
+    index  = 1
+    branch = 'issue-1'
+    url    = 'https://github.com/zaynram/ramda-doc/issues/1'
 
-    [issue.vision]
-        [issue.vision.criteria]
-            requirements = [
-                'Stated acceptance/refusal of framework adoption, with supporting rationale.'
-            ]
+  [issue.vision.criteria]
+    requirements = [
+      'Stated acceptance/refusal of framework adoption, with supporting rationale.'
+    ]
 
-            [issue.vision.criteria.language-support]
-                inventory = [
-                    'python',
-                    'typescript',
-                    'javascript',
-                    'rust',
-                    'nushell',
-                    'posix'
-                ]
-                mechanism = 'Every language requires an explicit generation mechanism.'
+    [issue.vision.criteria.language-support]
+      inventory = [
+        'python',
+        'typescript',
+        'javascript',
+        'rust',
+        'nushell',
+        'posix',
+      ]
+      mechanism = 'Every language requires an explicit generation mechanism.'
 
-        [issue.vision.output]
-            alias   = 'ADR-0002'
-            path    = 'docs/decisions/0002-language-agnostic-reference-generation.draft.md'
-            purpose = 'Polyglot reference generation decision, recorded in MADR format.'
+  [issue.vision.output]
+    alias   = 'ADR-0002'
+    path    = 'docs/decisions/0002-language-agnostic-reference-generation.draft.md'
+    purpose = 'Polyglot reference generation decision, recorded in MADR format.'
 
-        [issue.vision.outcome]
-            mode    = 'compound'
-            threads = [
-                'definite stance on framework adoption',
-                'per-language generation mechanism(s)'
-            ]
+  [issue.vision.outcome]
+    mode    = 'compound'
+    threads = [
+      'definite stance on framework adoption',
+      'per-language generation mechanism(s)',
+    ]
 
-        [issue.vision.scope]
-            excluded = [
-                {
-                    item     = 'Output composition',
-                    deferred = 'ADR-0003'
-                },
-                {
-                    item     = 'Central indexing',
-                    deferred = 'ADR-0003'
-                },
-            ]
+  [[issue.vision.scope.excluded]]
+    item     = 'Output composition'
+    deferred = 'ADR-0003'
 
-        [issue.vision.landscape]
-            internal = [
-                {
-                    synopsis = 'Language-agnostic reference documentation generation.',
-                    type     = 'greenfield'
-                }
-            ]
-            external = {
-                existing-implementations = {
-                    availability       = 'sparse',
-                    candidate-options  = [
-                        {
-                            name       = 'mkdocstrings',
-                            assessment = 'Does not have support for the full language inventory; requires custom handler implementations for the gaps.'
-                        },
-                        {
-                            name       = 'fir',
-                            assessment = 'Generation achieved via shallow comment-block extraction rather than semantic parsing; requires comment convention adoption across target languages.'
-                        },
-                        {
-                            name       = 'waygrounddocgen',
-                            assessment = 'Achieves generic coverage by outsourcing extraction to an LLM rather than building language understanding.'
-                        }
-                    ],
-                    preliminary-stance = 'Each surveyed implementation is individually insufficient for the language requirements.'
-                }
-            }
+  [[issue.vision.scope.excluded]]
+    item     = 'Central indexing'
+    deferred = 'ADR-0003'
 
-    [issue.bindings]
-        [[issue.bindings.xvalue]]
-            type = 'effort-leverage'
-            item = 'Centralizes reference-documentation generation across every project a solo maintainer is responsible for, removing a recurring cost with no team to otherwise absorb it.'
+  [[issue.vision.landscape.internal]]
+    synopsis = 'Language-agnostic reference documentation generation.'
+    type     = 'greenfield'
 
-        [[issue.bindings.xvalue]]
-            type = 'gap-closure'
-            item = 'Closes a documentation-tooling gap specific to Nushell, whose ecosystem immaturity leaves no comparable existing solution for a shell language central to my own daily work.'
+  [issue.vision.landscape.external.existing-implementations]
+    availability       = 'sparse'
+    preliminary-stance = 'Each surveyed implementation is individually insufficient for the language requirements.'
 
-        [[issue.bindings.xvalue]]
-            type = 'precomputed-context'
-            item = 'Aggregated documentation across my Nushell modules and scripts becomes structured reference for both myself and for LLMs operating through my Nushell MCP implementation.'
+    [[issue.vision.landscape.external.existing-implementations.candidate-options]]
+      name       = 'mkdocstrings'
+      assessment = 'Does not have support for the full language inventory; requires custom handler implementations for the gaps.'
 
-        [[issue.bindings.xvalue]]
-            type = 'practice-fidelity'
-            item = 'TypeScript is my preferred language, but Claude-facing tooling is often written in vanilla JavaScript for portability; the requirement must track that practical reality rather than the stated preference alone.'
+    [[issue.vision.landscape.external.existing-implementations.candidate-options]]
+      name       = 'fir'
+      assessment = 'Generation achieved via shallow comment-block extraction rather than semantic parsing; requires comment convention adoption across target languages.'
 
-        [[issue.bindings.xvalue]]
-            type = 'precomputed-context'
-            item = 'Generated documentation serves as reference for both myself and Claude, particularly for cross-project work where equivalent synthesis through ad hoc exploration would be costly and potentially incomplete.'
+    [[issue.vision.landscape.external.existing-implementations.candidate-options]]
+      name       = 'waygrounddocgen'
+      assessment = 'Achieves generic coverage by outsourcing extraction to an LLM rather than building language understanding.'
+
+  [[issue.bindings.xvalue]]
+    type = 'effort-leverage'
+    item = 'Centralizes reference-documentation generation across every project a solo maintainer is responsible for, removing a recurring cost with no team to otherwise absorb it.'
+
+  [[issue.bindings.xvalue]]
+    type = 'gap-closure'
+    item = 'Closes a documentation-tooling gap specific to Nushell, whose ecosystem immaturity leaves no comparable existing solution for a shell language central to my own daily work.'
+
+  [[issue.bindings.xvalue]]
+    type = 'precomputed-context'
+    item = 'Aggregated documentation across my Nushell modules and scripts becomes structured reference for both myself and for LLMs operating through my Nushell MCP implementation.'
+
+  [[issue.bindings.xvalue]]
+    type = 'practice-fidelity'
+    item = 'TypeScript is my preferred language, but Claude-facing tooling is often written in vanilla JavaScript for portability; the requirement must track that practical reality rather than the stated preference alone.'
+
+  [[issue.bindings.xvalue]]
+    type = 'precomputed-context'
+    item = 'Generated documentation serves as reference for both myself and Claude, particularly for cross-project work where equivalent synthesis through ad hoc exploration would be costly and potentially incomplete.'
