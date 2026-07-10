@@ -160,10 +160,11 @@ export def --wrapped push [
   slug: string@_issue-slugs # The issue slug to push to remote
   --labels (-l): list<string> = [documentation] # Label(s) to create the issue with
   --branch (-b): string # The name of the branch this issue will be handled on
+  --initial (-i): string = main # The base branch to create the issue branch from
   --resume (-r): path # Path to a temp file containing built Markdown to resume from
   --existing (-e) # Pass this to update an existing issue instead of creating a new one
   ...rest: string # Additional arguments to pass to `gh issue create`
-]: nothing -> record<index: int, branch: string, url: string> {
+]: nothing -> oneof<nothing, record<index: int, branch: string, url: string>> {
   let base: record = main $slug
   let user: string = try { git config --get user.name } catch { '@me' } | str trim
   let desc: string = $base.name
@@ -180,14 +181,14 @@ export def --wrapped push [
         error make 'unable to save markdown'
       }
     }
-  let data: record = run-external ...[
-    ...(if $existing { [gh issue edit $base.reference.index] } else { [gh issue create] })
-    --title=($desc)
-    --assignee=($user)
-    --body-file=($path)
-    ...($labels | each { prepend [--label] } | flatten)
-    ...(if $resume != null { })
-  ] ...$rest out+err>|
+  let data: record = gh issue --body-file=($path) ...(
+    if $existing { [edit $base.reference.index] } else {
+      $labels
+      | par-each { prepend [--label] }
+      | flatten
+      | prepend [create --title=($desc) --assignee=($user)]
+    }
+  ) ...$rest out+err>|
     | complete
     | if $in.exit_code != 0 or ($in.stdout? | is-empty) {
       let out: record = $in
@@ -203,7 +204,18 @@ export def --wrapped push [
       | wrap reference
     }
 
-  try { $data | edit $slug --return | get reference } finally { rm --force $path }
+  try {
+    if not $existing {
+      gh issue develop $data.reference.index --base=($initial) --name=($branch | default $slug)
+      | complete
+      | if $in.exit_code != 0 { error make 'unable to create development branch for this issue' }
+      $data | edit $slug --return | get reference
+    } else {
+      fetch $slug
+    }
+  } finally {
+    rm --force $path
+  }
 }
 
 ## Utilities
