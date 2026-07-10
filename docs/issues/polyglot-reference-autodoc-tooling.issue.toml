@@ -26,7 +26,7 @@ mechanism = "Every language requires an explicit generation mechanism."
 
 [issue.vision.output]
 alias = "ADR-0002"
-path = "docs/decisions/0002-language-agnostic-reference-generation.md.md"
+path = "docs/decisions/0002-language-agnostic-reference-generation.md"
 purpose = "Polyglot reference generation decision, recorded in MADR format."
 
 [issue.vision.outcome]
