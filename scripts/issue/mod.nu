@@ -174,7 +174,13 @@ export def --wrapped push [
     | str join (char space)
   let path: string = $resume | default {
       try {
-        let temp: path = mktemp --suffix=md
+        let temp: path = try { mktemp --suffix=md } catch {
+          {
+            parent: $ROOT
+            stem: (random chars | prepend [.] | str join)
+            extension: md
+          } | path join
+        }
         $base | build-md | save --force $temp
         return $temp
       } catch {
@@ -247,10 +253,10 @@ def prop-table [
     alias cap = do { split words | str capitalize | str join (char space) }
     alias col-cap = do { rename ...($in | columns | each { cap }) }
     match $type {
-      list => { $value | to md --per-element }
+      list => { $value | to md --per-element | prepend '' }
       record => {
         $value | col-cap
-        | items {|k v| $"**($k)**: ($v | to text)\n" }
+        | items {|k v| $"**($k)**: ($v | to nuon --serialize --indent 2)\n" }
         | to md --per-element --pretty
       }
       table => { $value | col-cap | to md --pretty --per-element }
