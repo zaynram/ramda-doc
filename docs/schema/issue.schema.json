@@ -3,345 +3,23 @@
     "$id": "https://zaynram.github.io/ramda-doc/schema/issue.schema.json",
     "title": "Problem Awareness - Issue Schema",
     "description": "Vision and value definition for a work item, articulated prior to any decision or implementation work.",
-    "type": "object",
-    "properties": {
-        "issue": {
-            "oneOf": [
-                {
-                    "$anchor": "IssueV2",
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                        "version",
-                        "name",
-                        "slug",
-                        "status",
-                        "vision",
-                        "bindings",
-                        "reference"
-                    ],
-                    "properties": {
-                        "version": { "const": "2.0.0" },
-                        "extends": {
-                            "type": "array",
-                            "description": "An array of the paths to separate issues that are relevant to this issue. Relevance includes, but is not limited to, lineage (e.g. redefinition from hitting an `xabort`) and contextual overlap (e.g. shared components, prior art).",
-                            "items": { "$ref": "#/$defs/path" },
-                            "minItems": 1
-                        },
-                        "name": {
-                            "type": "string",
-                            "description": "Short, human-friendly label for this issue.",
-                            "maxLength": 35
-                        },
-                        "slug": {
-                            "$ref": "#/$defs/identifier",
-                            "description": "Simple, machine-friendly descriptor for this issue."
-                        },
-                        "reference": {
-                            "type": "object",
-                            "description": "Specification of the remote issue corresponding to this file.",
-                            "required": ["index", "url"],
-                            "properties": {
-                                "index": {
-                                    "type": "number",
-                                    "minimum": 0,
-                                    "description": "The issue number this file corresponds to on remote."
-                                },
-                                "branch": {
-                                    "type": "string",
-                                    "description": "The name of the branch this issue owns."
-                                },
-                                "url": {
-                                    "type": "string",
-                                    "format": "url",
-                                    "description": "Link to the remote issue."
-                                }
-                            }
-                        },
-                        "date": {
-                            "type": "string",
-                            "format": "date",
-                            "description": "Date of last modification, formatted as ISO 8601."
-                        },
-                        "status": {
-                            "description": "The status of this issue.",
-                            "enum": ["draft", "open", "aborted", "completed"],
-                            "default": "draft"
-                        },
-                        "vision": {
-                            "type": "object",
-                            "required": [
-                                "output",
-                                "criteria",
-                                "landscape",
-                                "outcome",
-                                "scope"
-                            ],
-                            "additionalProperties": false,
-                            "properties": {
-                                "output": {
-                                    "description": "The artifact(s) or format the outcome must take.",
-                                    "oneOf": [
-                                        {
-                                            "$ref": "#/$defs/synopsis",
-                                            "description": "Prose detailing the deliverable(s) for this issue."
-                                        },
-                                        {
-                                            "$ref": "#/$defs/artifact",
-                                            "description": "Single output artifact this issue's satisfaction will produce."
-                                        },
-                                        {
-                                            "type": "array",
-                                            "items": { "$ref": "#/$defs/artifact" },
-                                            "description": "Array of output artifact specifications."
-                                        }
-                                    ]
-                                },
-                                "criteria": {
-                                    "type": "object",
-                                    "description": "The discrete elements or dimensions that each require individual resolution. Every listed item must be satisfied for an outcome to be valid.",
-                                    "additionalProperties": true,
-                                    "properties": {
-                                        "requirements": {
-                                            "type": "array",
-                                            "items": { "$ref": "#/$defs/synopsis" },
-                                            "description": "An array of prose descriptions of distinct requirements for the issue's satisfaction."
-                                        },
-                                        "constraints": {
-                                            "type": "array",
-                                            "items": { "$ref": "#/$defs/synopsis" },
-                                            "description": "An array of prose descriptions of constraints that this issue's satisfaction must operate under."
-                                        }
-                                    }
-                                },
-                                "landscape": {
-                                    "type": "object",
-                                    "properties": {
-                                        "internal": {
-                                            "type": "array",
-                                            "description": "What already exists, or doesn't, that bounds or frees the work. Greenfield (clean) and brownfield (contaminated/built-up) are the two poles.",
-                                            "items": {
-                                                "type": "object",
-                                                "required": ["type", "synopsis"],
-                                                "properties": {
-                                                    "type": {
-                                                        "enum": [
-                                                            "greenfield",
-                                                            "brownfield"
-                                                        ]
-                                                    },
-                                                    "synopsis": {
-                                                        "$ref": "#/$defs/synopsis",
-                                                        "description": "Brief description of this item's surface."
-                                                    }
-                                                },
-                                                "oneOf": [
-                                                    {
-                                                        "description": "What doesn't exist in any prior state and must be developed from scratch (greenfield), each as a brief synopsis of the relevant surface.",
-                                                        "properties": {
-                                                            "type": {
-                                                                "const": "greenfield"
-                                                            }
-                                                        }
-                                                    },
-                                                    {
-                                                        "description": "What previously exists from a prior state that must be redeveloped for this issue (brownfield).",
-                                                        "required": [
-                                                            "type",
-                                                            "reference",
-                                                            "incompatibility"
-                                                        ],
-                                                        "properties": {
-                                                            "type": {
-                                                                "const": "brownfield"
-                                                            },
-                                                            "reference": {
-                                                                "description": "Path or descriptive reference of this surface's prior state existence (where it can be found).",
-                                                                "oneOf": [
-                                                                    {
-                                                                        "$ref": "#/$defs/path",
-                                                                        "description": "The location of the surface's prior state existence in the local filesystem."
-                                                                    },
-                                                                    {
-                                                                        "$ref": "#/$defs/description",
-                                                                        "description": "Detailed description of this surface's prior state existence (for cases where location may not be reasonably specified)."
-                                                                    }
-                                                                ]
-                                                            },
-                                                            "incompatibility": {
-                                                                "description": "Why the existing implementation does not fit the issue's criteria for this surface. Describe what needs to change before this issue can be satisfied.",
-                                                                "oneOf": [
-                                                                    {
-                                                                        "$ref": "#/$defs/synopsis"
-                                                                    },
-                                                                    {
-                                                                        "type": "array",
-                                                                        "items": {
-                                                                            "$ref": "#/$defs/synopsis"
-                                                                        }
-                                                                    }
-                                                                ]
-                                                            }
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        },
-                                        "external": {
-                                            "description": "The external state of available options or precedent, and whatever gap or limitation persists regardless of what eventually gets chosen.",
-                                            "oneOf": [
-                                                {
-                                                    "type": "object",
-                                                    "additionalProperties": true
-                                                },
-                                                {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "anyOf": [
-                                                            { "type": "string" },
-                                                            {
-                                                                "type": "object",
-                                                                "additionalProperties": true
-                                                            }
-                                                        ]
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    }
-                                },
-                                "outcome": {
-                                    "description": "Details about this issue's success.",
-                                    "oneOf": [
-                                        {
-                                            "type": "string",
-                                            "const": "singular",
-                                            "default": "singular"
-                                        },
-                                        {
-                                            "type": "object",
-                                            "required": ["mode", "threads"],
-                                            "properties": {
-                                                "mode": {
-                                                    "enum": ["compound"],
-                                                    "description": "Whether the required outcome is singular or compound."
-                                                },
-                                                "threads": {
-                                                    "type": "array",
-                                                    "items": { "type": "string" },
-                                                    "description": "What must hold consistently across all parts of the outcome requirement(s).",
-                                                    "minItems": 1
-                                                }
-                                            }
-                                        }
-                                    ]
-                                },
-                                "scope": {
-                                    "type": "object",
-                                    "required": ["excluded"],
-                                    "properties": {
-                                        "excluded": {
-                                            "type": "array",
-                                            "description": "What's explicitly excluded from this scope, and which future scope will handle it (if applicable).",
-                                            "items": {
-                                                "type": "object",
-                                                "required": ["item", "deferred"],
-                                                "properties": {
-                                                    "item": {
-                                                        "$ref": "#/$defs/statement",
-                                                        "description": "One-line description or descriptor of this scope item."
-                                                    },
-                                                    "deferred": {
-                                                        "oneOf": [
-                                                            { "const": false },
-                                                            {
-                                                                "type": "string",
-                                                                "minLength": 1,
-                                                                "description": "The scope that this item is deferred to be handled in."
-                                                            }
-                                                        ]
-                                                    }
-                                                }
-                                            },
-                                            "default": []
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "bindings": {
-                            "type": "object",
-                            "required": ["xvalue"],
-                            "properties": {
-                                "xabort": {
-                                    "type": "array",
-                                    "description": "Anticipated situations in which this issue will no longer be viable. Serves as a trigger index for the development work to refer to should complications arise.",
-                                    "items": {
-                                        "type": "object",
-                                        "additionalProperties": true,
-                                        "properties": {
-                                            "trigger": {
-                                                "type": "object",
-                                                "description": "Condition(s) that must be satisfied before the action is taken.",
-                                                "required": ["conditions"],
-                                                "properties": {
-                                                    "conditions": {
-                                                        "type": "array",
-                                                        "items": { "type": "string" },
-                                                        "description": "What must be true before the action is taken."
-                                                    },
-                                                    "mode": {
-                                                        "description": "Whether to weigh the conditions individually or combined.",
-                                                        "enum": ["AND", "OR"],
-                                                        "default": "OR"
-                                                    }
-                                                }
-                                            },
-                                            "action": {
-                                                "enum": ["abort", "reevaluate"],
-                                                "description": "Whether the condition's satisfaction should immediately close this issue or if it should be redefined in a new issue.",
-                                                "default": "abort"
-                                            }
-                                        }
-                                    }
-                                },
-                                "xvalue": {
-                                    "type": "array",
-                                    "description": "Expected value; motivating reasons this work item matters. While most work benefits from surfacing two or more distinct angles, only one is explicitly required.",
-                                    "minItems": 1,
-                                    "items": {
-                                        "type": "object",
-                                        "required": ["type", "item"],
-                                        "additionalProperties": false,
-                                        "properties": {
-                                            "type": {
-                                                "$ref": "#/$defs/identifier",
-                                                "description": "The kind of value this entry expresses, as a concise tag.\nExamples (with definitions):\n* effort-leverage - recurring cost removed, amplified by the absence of other structure to absorb it\n* gap-closure - an absence resolved that persists specifically because of your own context, not a general market gap\n* practice-fidelity - tracks what is actually practiced or used, not an idealized preference\n* precomputed-context - prepackages something that would otherwise require costly or incomplete ad hoc reconstruction.\nAny other string is accepted if none of these fit.",
-                                                "examples": [
-                                                    "effort-leverage",
-                                                    "gap-closure",
-                                                    "practice-fidelity",
-                                                    "precomputed-context"
-                                                ]
-                                            },
-                                            "item": {
-                                                "$ref": "#/$defs/synopsis",
-                                                "description": "The concrete value statement itself."
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                {
-                    "properties": { "version": { "const": "1.0.0", "default": "1.0.0" } },
-                    "additionalProperties": true
-                }
-            ]
+    "oneOf": [
+        {
+            "type": "object",
+            "required": ["version", "issue"],
+            "properties": {
+                "version": { "const": "3.0.0" },
+                "issue": { "$ref": "#/$defs/issue/v3.0.0" },
+                "tasks": { "$ref": "#/$defs/tasks/v3.0.0" }
+            }
+        },
+        {
+            "type": "object",
+            "required": ["issue"],
+            "additionalProperties": false,
+            "properties": { "issue": { "$ref": "#/$defs/issue/v2.0.0" } }
         }
-    },
+    ],
     "$defs": {
         "version": {
             "description": "The version of the schema to validate with. Useful to keep validation passing without changing substance after schema updates.",
@@ -371,7 +49,53 @@
         "path": {
             "description": "String containing a path value ending in either a trailing slash or 1+ word characters.",
             "type": "string",
-            "pattern": "^.+([/]|w+)"
+            "pattern": "^.+([/]|\\w+)"
+        },
+        "extends": {
+            "type": "array",
+            "description": "An array of the paths to separate issues that are relevant to this issue. Relevance includes, but is not limited to, lineage (e.g. redefinition from hitting an `xabort`) and contextual overlap (e.g. shared components, prior art).",
+            "items": { "$ref": "#/$defs/path" },
+            "minItems": 1
+        },
+        "name": {
+            "type": "string",
+            "description": "Short, human-friendly label for this issue.",
+            "maxLength": 35
+        },
+        "slug": {
+            "$ref": "#/$defs/identifier",
+            "description": "Simple, machine-friendly descriptor for this issue."
+        },
+        "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date of last modification, formatted as ISO 8601."
+        },
+        "status": {
+            "description": "The status of this issue.",
+            "enum": ["draft", "open", "aborted", "completed"],
+            "default": "draft"
+        },
+        "reference": {
+            "type": "object",
+            "description": "Specification of the remote issue corresponding to this file.",
+            "required": ["index", "url"],
+            "properties": {
+                "index": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "The issue number this file corresponds to on remote."
+                },
+                "branch": {
+                    "type": "string",
+                    "description": "The name of the branch this issue owns."
+                },
+                "url": {
+                    "type": "string",
+                    "format": "url",
+                    "description": "Link to the remote issue."
+                }
+            }
         },
         "artifact": {
             "type": "object",
@@ -388,6 +112,330 @@
                 "purpose": {
                     "$ref": "#/$defs/synopsis",
                     "description": "The reason for this artifact's existence."
+                }
+            }
+        },
+        "output": {
+            "description": "The artifact(s) or format the outcome must take.",
+            "oneOf": [
+                {
+                    "$ref": "#/$defs/synopsis",
+                    "description": "Prose detailing the deliverable(s) for this issue."
+                },
+                {
+                    "$ref": "#/$defs/artifact",
+                    "description": "Single output artifact this issue's satisfaction will produce."
+                },
+                {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/artifact" },
+                    "description": "Array of output artifact specifications."
+                }
+            ]
+        },
+        "criteria": {
+            "type": "object",
+            "description": "The discrete elements or dimensions that each require individual resolution. Every listed item must be satisfied for an outcome to be valid.",
+            "additionalProperties": true,
+            "properties": {
+                "requirements": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/synopsis" },
+                    "description": "An array of prose descriptions of distinct requirements for the issue's satisfaction."
+                },
+                "constraints": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/synopsis" },
+                    "description": "An array of prose descriptions of constraints that this issue's satisfaction must operate under."
+                }
+            }
+        },
+        "outcome": {
+            "description": "Details about this issue's success.",
+            "oneOf": [
+                { "type": "string", "const": "singular", "default": "singular" },
+                {
+                    "type": "object",
+                    "required": ["mode", "threads"],
+                    "properties": {
+                        "mode": {
+                            "enum": ["compound"],
+                            "description": "Whether the required outcome is singular or compound."
+                        },
+                        "threads": {
+                            "type": "array",
+                            "items": { "type": "string" },
+                            "description": "What must hold consistently across all parts of the outcome requirement(s).",
+                            "minItems": 1
+                        }
+                    }
+                }
+            ]
+        },
+        "landscape": {
+            "type": "object",
+            "properties": {
+                "internal": {
+                    "type": "array",
+                    "description": "What already exists, or doesn't, that bounds or frees the work. Greenfield (clean) and brownfield (contaminated/built-up) are the two poles.",
+                    "items": {
+                        "type": "object",
+                        "required": ["type", "synopsis"],
+                        "properties": {
+                            "type": { "enum": ["greenfield", "brownfield"] },
+                            "synopsis": {
+                                "$ref": "#/$defs/synopsis",
+                                "description": "Brief description of this item's surface."
+                            }
+                        },
+                        "oneOf": [
+                            {
+                                "description": "What doesn't exist in any prior state and must be developed from scratch (greenfield), each as a brief synopsis of the relevant surface.",
+                                "properties": { "type": { "const": "greenfield" } }
+                            },
+                            {
+                                "description": "What previously exists from a prior state that must be redeveloped for this issue (brownfield).",
+                                "required": ["type", "reference", "incompatibility"],
+                                "properties": {
+                                    "type": { "const": "brownfield" },
+                                    "reference": {
+                                        "description": "Path or descriptive reference of this surface's prior state existence (where it can be found).",
+                                        "oneOf": [
+                                            {
+                                                "$ref": "#/$defs/path",
+                                                "description": "The location of the surface's prior state existence in the local filesystem."
+                                            },
+                                            {
+                                                "$ref": "#/$defs/description",
+                                                "description": "Detailed description of this surface's prior state existence (for cases where location may not be reasonably specified)."
+                                            }
+                                        ]
+                                    },
+                                    "incompatibility": {
+                                        "description": "Why the existing implementation does not fit the issue's criteria for this surface. Describe what needs to change before this issue can be satisfied.",
+                                        "oneOf": [
+                                            { "$ref": "#/$defs/synopsis" },
+                                            {
+                                                "type": "array",
+                                                "items": { "$ref": "#/$defs/synopsis" }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "external": {
+                    "description": "The external state of available options or precedent, and whatever gap or limitation persists regardless of what eventually gets chosen.",
+                    "oneOf": [
+                        { "type": "object", "additionalProperties": true },
+                        {
+                            "type": "array",
+                            "items": {
+                                "anyOf": [
+                                    { "type": "string" },
+                                    { "type": "object", "additionalProperties": true }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "scope": {
+            "type": "object",
+            "required": ["excluded"],
+            "properties": {
+                "excluded": {
+                    "type": "array",
+                    "description": "What's explicitly excluded from this scope, and which future scope will handle it (if applicable).",
+                    "items": {
+                        "type": "object",
+                        "required": ["item", "deferred"],
+                        "properties": {
+                            "item": {
+                                "$ref": "#/$defs/statement",
+                                "description": "One-line description or descriptor of this scope item."
+                            },
+                            "deferred": {
+                                "oneOf": [
+                                    { "const": false },
+                                    {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "description": "The scope that this item is deferred to be handled in."
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "default": []
+                }
+            }
+        },
+        "vision": {
+            "type": "object",
+            "required": ["output", "criteria", "landscape", "outcome", "scope"],
+            "additionalProperties": false,
+            "properties": {
+                "output": { "$ref": "#/$defs/output" },
+                "criteria": { "$ref": "#/$defs/criteria" },
+                "landscape": { "$ref": "#/$defs/landscape" },
+                "outcome": { "$ref": "#/$defs/outcome" },
+                "scope": { "$ref": "#/$defs/scope" }
+            }
+        },
+        "bindings": {
+            "type": "object",
+            "required": ["xvalue"],
+            "properties": {
+                "xabort": {
+                    "type": "array",
+                    "description": "Anticipated situations in which this issue will no longer be viable. Serves as a trigger index for the development work to refer to should complications arise.",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "properties": {
+                            "trigger": {
+                                "type": "object",
+                                "description": "Condition(s) that must be satisfied before the action is taken.",
+                                "required": ["conditions"],
+                                "properties": {
+                                    "conditions": {
+                                        "type": "array",
+                                        "items": { "type": "string" },
+                                        "description": "What must be true before the action is taken."
+                                    },
+                                    "mode": {
+                                        "description": "Whether to weigh the conditions individually or combined.",
+                                        "enum": ["AND", "OR"],
+                                        "default": "OR"
+                                    }
+                                }
+                            },
+                            "action": {
+                                "enum": ["abort", "reevaluate"],
+                                "description": "Whether the condition's satisfaction should immediately close this issue or if it should be redefined in a new issue.",
+                                "default": "abort"
+                            }
+                        }
+                    }
+                },
+                "xvalue": {
+                    "type": "array",
+                    "description": "Expected value; motivating reasons this work item matters. While most work benefits from surfacing two or more distinct angles, only one is explicitly required.",
+                    "minItems": 1,
+                    "items": {
+                        "type": "object",
+                        "required": ["type", "item"],
+                        "additionalProperties": false,
+                        "properties": {
+                            "type": {
+                                "$ref": "#/$defs/identifier",
+                                "description": "The kind of value this entry expresses, as a concise tag.\nExamples (with definitions):\n* effort-leverage - recurring cost removed, amplified by the absence of other structure to absorb it\n* gap-closure - an absence resolved that persists specifically because of your own context, not a general market gap\n* practice-fidelity - tracks what is actually practiced or used, not an idealized preference\n* precomputed-context - prepackages something that would otherwise require costly or incomplete ad hoc reconstruction.\nAny other string is accepted if none of these fit.",
+                                "examples": [
+                                    "effort-leverage",
+                                    "gap-closure",
+                                    "practice-fidelity",
+                                    "precomputed-context"
+                                ]
+                            },
+                            "item": {
+                                "$ref": "#/$defs/synopsis",
+                                "description": "The concrete value statement itself."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "issue": {
+            "v2.0.0": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "version",
+                    "name",
+                    "slug",
+                    "date",
+                    "reference",
+                    "vision",
+                    "bindings"
+                ],
+                "properties": {
+                    "version": { "enum": ["1.0.0", "2.0.0"] },
+                    "extends": { "$ref": "#/$defs/extends" },
+                    "name": { "$ref": "#/$defs/name" },
+                    "slug": { "$ref": "#/$defs/slug" },
+                    "reference": { "$ref": "#/$defs/reference" },
+                    "date": { "$ref": "#/$defs/date" },
+                    "status": { "$ref": "#/$defs/status" },
+                    "vision": { "$ref": "#/$defs/vision" },
+                    "bindings": { "$ref": "#/$defs/bindings" }
+                }
+            },
+            "v3.0.0": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["name", "slug", "date", "vision", "bindings"],
+                "properties": {
+                    "extends": { "$ref": "#/$defs/extends" },
+                    "name": { "$ref": "#/$defs/name" },
+                    "slug": { "$ref": "#/$defs/slug" },
+                    "reference": { "$ref": "#/$defs/reference" },
+                    "date": { "$ref": "#/$defs/date" },
+                    "status": { "$ref": "#/$defs/status" },
+                    "vision": { "$ref": "#/$defs/vision" },
+                    "bindings": { "$ref": "#/$defs/bindings" }
+                }
+            }
+        },
+        "tasks": {
+            "v3.0.0": {
+                "type": "object",
+                "propertyNames": { "type": "string", "pattern": "\\d+" },
+                "additionalProperties": {
+                    "type": "object",
+                    "required": ["id", "target", "completed", "subtasks"],
+                    "default": {
+                    },
+                    "properties": {
+                        "id": { "$ref": "#/$defs/identifier" },
+                        "target": {
+                            "$ref": "#/$defs/synopsis",
+                            "description": "Concise statement providing a distinct need that this task will address.",
+                            "minLength": 1
+                        },
+                        "completed": {
+                            "description": "Whether or when this task was completed. If incomplete, then it must be the literal `false`. Otherwise, it must be the date of completion.",
+                            "oneOf": [{ "const": false }, { "$ref": "#/$defs/date" }]
+                        },
+                        "subtasks": {
+                            "description": "An ordered array of steps required for satisfaction of this task, in handling sequence.",
+                            "type": "array",
+                            "minItems": 1,
+                            "items": {
+                                "type": "object",
+                                "required": ["synopsis", "llm", "done"],
+                                "properties": {
+                                    "synopsis": {
+                                        "$ref": "#/$defs/statement",
+                                        "minLength": 1
+                                    },
+                                    "llm": {
+                                        "description": "Whether this step is assignable to an LLM alone (automation), a human alone (none), or a collaborative effort between both (augmentation).",
+                                        "enum": ["augmentation", "automation", "none"],
+                                        "default": "none"
+                                    },
+                                    "done": {
+                                        "type": "boolean",
+                                        "description": "Whether this step has been completed or not."
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

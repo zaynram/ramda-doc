@@ -27,9 +27,9 @@ export def fetch [
     get stdout
     | from json
     | into int number
-    | into datetime createdAt
-    | str downcase state
     | rename --column={number: index state: status createdAt: date}
+    | update date { into datetime | format date %Y-%m-%d }
+    | update status { str lowercase } # nu-lint-ignore: nu_parse_error
     | update title { parse '{name} ({slug})' | into record }
     | insert name {|row| $row.title.name }
     | insert slug {|row| $row.title.slug }
@@ -100,11 +100,11 @@ export def edit [
 
   let base: record = main $slug
   let data: record = $base | merge deep --strategy=$strategy $edit
+  let toml: path = build-path $slug
 
   if $base != $data {
     try {
-      let text: string = $data | wrap issue | to toml | toml-fmt
-      $text | save --force (build-path $slug)
+      open $toml | upsert issue $data | save --force $toml
     } catch {
       error make {
         msg: 'unable to serialize and write updated TOML'
