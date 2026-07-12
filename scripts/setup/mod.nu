@@ -7,6 +7,7 @@ const D2: record<url: string, pin: list> = {
   url: `https://d2lang.com/install.sh`
   pin: [--version v0.7.1]
 }
+const TASKS: string = 'https://github.com/zaynram/nushell-tasks.git'
 
 # Configure the project's local Git hooks.
 export def git-hooks []: nothing -> nothing {
@@ -77,22 +78,21 @@ export def fetch-d2 []: nothing -> oneof<nothing, string> {
 # cannot break environments without nupm.
 export def nupm-tasks []: nothing -> nothing {
   # An unset home must not fall through: '' resolves to the current directory.
-  let home: any = $env.NUPM_HOME?
-  if $home == null or ($home | path type) != dir {
-    log info 'setup.nupm-tasks skipped ($env.NUPM_HOME is not an existing directory)'
-    return
-  }
-  let install: record = do {
+  if $env has NUPM_HOME and ($env.NUPM_HOME | path type) != dir {
+    log warning 'setup.nupm-tasks skipped; $env.NUPM_HOME is not a directory'
+  } else {
     ^$nu.current-exe --no-config-file ...[
-      --include-path ($home | path join modules)
-      --commands $"use nupm; nupm install --path ($ROOT | path join scripts tasks | to nuon) --force --no-confirm"
-    ]
-  } | complete
-  if $install.exit_code != 0 {
-    error make --unspanned $"`nupm install` did not succeed:\n($install.stderr)"
+      --include-path
+      ($env.NUPM_HOME | path join modules)
+      --commands
+      $"use nupm; nupm install --force --git '($TASKS)'"
+    ] out+err>|
+    | complete
+    | if $in.exit_code != 0 {
+      error make --unspanned $"`nupm install` did not succeed:\n($in.stdout?)"
+    }
+    log info $"(ansi g)setup.nupm-tasks done(ansi rst)"
   }
-
-  log info $"(ansi g)setup.nupm-tasks done(ansi rst)"
 }
 
 # Run a selection of the setup functions.

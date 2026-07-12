@@ -1,165 +1,117 @@
 version = '3.0.0'
 
 [issue]
-  name   = 'Write ADR-0002'
-  slug   = 'polyglot-reference-autodoc-tooling'
-  date   = 2026-07-09
-  status = 'open'
+    name   = 'Write ADR-0002'
+    slug   = 'polyglot-reference-autodoc-tooling'
+    date   = 2026-07-09
+    status = 'open'
 
-  [issue.reference]
-    index  = 1
-    branch = 'issue-1'
-    url    = 'https://github.com/zaynram/ramda-doc/issues/1'
+    [issue.reference]
+        index  = 1
+        branch = 'issue-1'
+        url    = 'https://github.com/zaynram/ramda-doc/issues/1'
 
-  [issue.vision.criteria]
-    requirements = [
-      'Stated acceptance/refusal of framework adoption, with supporting rationale.'
-    ]
-
-    [issue.vision.criteria.language-support]
-      inventory = [
-        'python',
-        'typescript',
-        'javascript',
-        'rust',
-        'nushell',
-        'posix',
-      ]
-      mechanism = 'Every language requires an explicit generation mechanism.'
-
-  [issue.vision.output]
-    alias   = 'ADR-0002'
-    path    = 'docs/decisions/0002-language-agnostic-reference-generation.md'
-    purpose = 'Polyglot reference generation decision, recorded in MADR format.'
-
-  [issue.vision.outcome]
-    mode    = 'compound'
-    threads = [
-      'definite stance on framework adoption',
-      'per-language generation mechanism(s)',
-    ]
-
-  [[issue.vision.scope.excluded]]
-    item     = 'Output composition'
-    deferred = 'ADR-0003'
-
-  [[issue.vision.scope.excluded]]
-    item     = 'Central indexing'
-    deferred = 'ADR-0003'
-
-  [issue.vision.landscape]
-    internal = [
-      {
-        synopsis = 'Language-agnostic reference documentation generation.',
-        type     = 'greenfield'
-      }
-    ]
-
-    [issue.vision.landscape.external]
-      [issue.vision.landscape.external.existing-implementations]
-        availability       = 'sparse'
-        preliminary-stance = 'Each surveyed implementation is individually insufficient for the language requirements.'
-        candidate-options  = [
-          {
-            name       = 'mkdocstrings',
-            assessment = 'Does not have support for the full language inventory; requires custom handler implementations for the gaps.'
-          },
-          {
-            name       = 'fir',
-            assessment = 'Generation achieved via shallow comment-block extraction rather than semantic parsing; requires comment convention adoption across target languages.'
-          },
-          {
-            name       = 'waygrounddocgen',
-            assessment = 'Achieves generic coverage by outsourcing extraction to an LLM rather than building language understanding.'
-          }
+    [issue.vision.criteria]
+        requirements = [
+            'Stated acceptance/refusal of framework adoption, with supporting rationale.'
         ]
 
-  [issue.bindings]
-    [[issue.bindings.xvalue]]
-      type = 'effort-leverage'
-      item = 'Centralizes reference-documentation generation across every project a solo maintainer is responsible for, removing a recurring cost with no team to otherwise absorb it.'
+        [issue.vision.criteria.language-support]
+            inventory = [
+                'python',
+                'typescript',
+                'javascript',
+                'rust',
+                'nushell',
+                'posix',
+            ]
+            mechanism = 'Every language requires an explicit generation mechanism.'
 
-    [[issue.bindings.xvalue]]
-      type = 'gap-closure'
-      item = 'Closes a documentation-tooling gap specific to Nushell, whose ecosystem immaturity leaves no comparable existing solution for a shell language central to my own daily work.'
+    [issue.vision.output]
+        alias   = 'ADR-0002'
+        path    = 'docs/decisions/0002-language-agnostic-reference-generation.md'
+        purpose = 'Polyglot reference generation decision, recorded in MADR format.'
 
-    [[issue.bindings.xvalue]]
-      type = 'precomputed-context'
-      item = 'Aggregated documentation across my Nushell modules and scripts becomes structured reference for both myself and for LLMs operating through my Nushell MCP implementation.'
+    [issue.vision.outcome]
+        mode    = 'compound'
+        threads = [
+            'definite stance on framework adoption',
+            'per-language generation mechanism(s)',
+        ]
 
-    [[issue.bindings.xvalue]]
-      type = 'practice-fidelity'
-      item = 'TypeScript is my preferred language, but Claude-facing tooling is often written in vanilla JavaScript for portability; the requirement must track that practical reality rather than the stated preference alone.'
+    [[issue.vision.scope.excluded]]
+        item     = 'Output composition'
+        deferred = 'ADR-0003'
 
-    [[issue.bindings.xvalue]]
-      type = 'precomputed-context'
-      item = 'Generated documentation serves as reference for both myself and Claude, particularly for cross-project work where equivalent synthesis through ad hoc exploration would be costly and potentially incomplete.'
+    [[issue.vision.scope.excluded]]
+        item     = 'Central indexing'
+        deferred = 'ADR-0003'
+
+    [issue.vision.landscape]
+        internal = [
+            { synopsis = 'Language-agnostic reference documentation generation.', type = 'greenfield' }
+        ]
+
+        [issue.vision.landscape.external]
+            [issue.vision.landscape.external.existing-implementations]
+                availability       = 'sparse'
+                preliminary-stance = 'Each surveyed implementation is individually insufficient for the language requirements.'
+                candidate-options  = [
+                    { name = 'mkdocstrings', assessment = 'Does not have support for the full language inventory; requires custom handler implementations for the gaps.' },
+                    { name = 'fir', assessment = 'Generation achieved via shallow comment-block extraction rather than semantic parsing; requires comment convention adoption across target languages.' },
+                    { name = 'waygrounddocgen', assessment = 'Achieves generic coverage by outsourcing extraction to an LLM rather than building language understanding.' }
+                ]
+
+    [issue.bindings]
+        [[issue.bindings.xvalue]]
+            type = 'effort-leverage'
+            item = 'Centralizes reference-documentation generation across every project a solo maintainer is responsible for, removing a recurring cost with no team to otherwise absorb it.'
+
+        [[issue.bindings.xvalue]]
+            type = 'gap-closure'
+            item = 'Closes a documentation-tooling gap specific to Nushell, whose ecosystem immaturity leaves no comparable existing solution for a shell language central to my own daily work.'
+
+        [[issue.bindings.xvalue]]
+            type = 'precomputed-context'
+            item = 'Aggregated documentation across my Nushell modules and scripts becomes structured reference for both myself and for LLMs operating through my Nushell MCP implementation.'
+
+        [[issue.bindings.xvalue]]
+            type = 'practice-fidelity'
+            item = 'TypeScript is my preferred language, but Claude-facing tooling is often written in vanilla JavaScript for portability; the requirement must track that practical reality rather than the stated preference alone.'
+
+        [[issue.bindings.xvalue]]
+            type = 'precomputed-context'
+            item = 'Generated documentation serves as reference for both myself and Claude, particularly for cross-project work where equivalent synthesis through ad hoc exploration would be costly and potentially incomplete.'
 
 [tasks]
-  [tasks.0]
-    id        = 'research-candidate-options'
-    target    = 'Catalog framework language coverage requirements.'
-    completed = false
-    subtasks  = [
-      {
-        synopsis = 'mkdocstrings handlers',
-        done     = false,
-        llm      = 'automation'
-      },
-      {
-        synopsis = 'fir comment conventions',
-        done     = false,
-        llm      = 'automation'
-      },
-      {
-        synopsis = 'waygrounddocgen llm reliability',
-        done     = false,
-        llm      = 'augmentation'
-      },
-    ]
+    [tasks.0]
+        id        = 'research-candidate-options'
+        target    = 'Catalog framework language coverage requirements.'
+        completed = false
+        subtasks  = [
+            { synopsis = 'mkdocstrings handlers', done = false, llm = 'automation' },
+            { synopsis = 'fir comment conventions', done = false, llm = 'automation' },
+            { synopsis = 'waygrounddocgen llm reliability', done = false, llm = 'augmentation' },
+        ]
 
-  [tasks.1]
-    id        = 'assess-and-decide'
-    target    = 'Make the decision regarding framework usage.'
-    completed = false
-    subtasks  = [
-      {
-        synopsis = 'catalog and synthesize research findings',
-        done     = false,
-        llm      = 'augmentation'
-      },
-      {
-        synopsis = 'refuse all or select framework to extend',
-        done     = false,
-        llm      = 'none'
-      }
-    ]
+    [tasks.1]
+        id        = 'assess-and-decide'
+        target    = 'Make the decision regarding framework usage.'
+        completed = false
+        subtasks  = [
+            { synopsis = 'catalog and synthesize research findings', done = false, llm = 'augmentation' },
+            { synopsis = 'refuse all or select framework to extend', done = false, llm = 'none' }
+        ]
 
-  [tasks.2]
-    id        = 'complete-madr-template'
-    target    = 'Author the ADR; fill the MADR template fields.'
-    completed = false
-    subtasks  = [
-      { synopsis = 'decision drivers', done = false, llm = 'none' },
-      {
-        synopsis = 'considered options',
-        done     = false,
-        llm      = 'none'
-      },
-      {
-        synopsis = 'decision outcome - consequences',
-        done     = false,
-        llm      = 'none'
-      },
-      {
-        synopsis = 'decision outcome - confirmation',
-        done     = false,
-        llm      = 'none'
-      },
-      {
-        synopsis = 'pros and cons of alternatives',
-        done     = false,
-        llm      = 'none'
-      },
-      { synopsis = 'more information', done = false, llm = 'none' }
-    ]
+    [tasks.2]
+        id        = 'complete-madr-template'
+        target    = 'Author the ADR; fill the MADR template fields.'
+        completed = false
+        subtasks  = [
+            { synopsis = 'decision drivers', done = false, llm = 'none' },
+            { synopsis = 'considered options', done = false, llm = 'none' },
+            { synopsis = 'decision outcome - consequences', done = false, llm = 'none' },
+            { synopsis = 'decision outcome - confirmation', done = false, llm = 'none' },
+            { synopsis = 'pros and cons of alternatives', done = false, llm = 'none' },
+            { synopsis = 'more information', done = false, llm = 'none' }
+        ]
