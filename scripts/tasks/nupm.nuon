@@ -1,6 +1,7 @@
 {
-  name: tasks,
-  version: "0.1.0",
-  type: module,
-  description: "Task tracker backed by an in-memory SQLite store, with issue-file import/sync, auto-commits, and undo"
+  name: tasks
+  description: "Task management utilities built on Nushell's sqlite built-ins."
+  version: 0.1.0
+  license: MIT
+  type: module
 }
