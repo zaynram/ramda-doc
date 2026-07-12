@@ -77,15 +77,18 @@ export def fetch-d2 []: nothing -> oneof<nothing, string> {
 # a child interpreter from $env.NUPM_HOME/modules, so the parse-time import
 # cannot break environments without nupm.
 export def nupm-tasks []: nothing -> nothing {
-  # An unset home must not fall through: '' resolves to the current directory.
-  if $env has NUPM_HOME and ($env.NUPM_HOME | path type) != dir {
+  # An unset home must not fall through: '' resolves to the current directory,
+  # and `$env has NUPM_HOME and …` alone routes the unset case into the install
+  # branch where the strict `$env.NUPM_HOME` access throws.
+  if not ($env has NUPM_HOME) or ($env.NUPM_HOME | path type) != dir {
     log warning 'setup.nupm-tasks skipped; $env.NUPM_HOME is not a directory'
   } else {
     ^$nu.current-exe --no-config-file ...[
       --include-path
       ($env.NUPM_HOME | path join modules)
       --commands
-      $"use nupm; nupm install --force --git '($TASKS)'"
+      # --no-confirm: any nupm prompt would hang invisibly in the captured child.
+      $"use nupm; nupm install --force --no-confirm --git '($TASKS)'"
     ] out+err>|
     | complete
     | if $in.exit_code != 0 {
