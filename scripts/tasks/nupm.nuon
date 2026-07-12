@@ -1,0 +1,6 @@
+{
+  name: tasks,
+  version: "0.1.0",
+  type: module,
+  description: "Task tracker backed by an in-memory SQLite store, with issue-file import/sync, auto-commits, and undo"
+}

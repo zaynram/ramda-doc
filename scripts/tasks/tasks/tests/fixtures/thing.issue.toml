@@ -1,0 +1,58 @@
+version = '3.0.0'
+
+# hand comment survives
+[issue]
+  name   = 'Fixture Issue'
+  slug   = 'fixture-issue'
+  date   = 2026-07-09
+  status = 'open'
+
+  # %reference%
+
+  [issue.vision.criteria]
+    requirements = ['req one']
+
+  [issue.vision.output]
+    alias   = 'OUT'
+    path    = 'docs/out.md'
+    purpose = 'Testing.'
+
+  [issue.vision.outcome]
+    mode    = 'compound'
+    threads = ['thread one', 'thread two']
+
+  [[issue.vision.scope.excluded]]
+    item     = 'nothing'
+    deferred = 'later'
+
+  [issue.vision.landscape]
+    internal = [
+      {
+        synopsis = 'Greenfield thing.',
+        type     = 'greenfield'
+      }
+    ]
+
+  [issue.bindings]
+    [[issue.bindings.xvalue]]
+      type = 'effort-leverage'
+      item = 'value statement'
+
+[tasks]
+  0 = {
+    id        = 'alpha',
+    target    = 'First target.',
+    completed = false,
+    subtasks  = [
+      { synopsis = 'one', done = false, llm = 'none' },
+      { synopsis = 'two', done = false, llm = 'none' },
+    ]
+  }
+  1 = {
+    id        = 'beta',
+    target    = 'Second target.',
+    completed = false,
+    subtasks  = [
+      { synopsis = 'solo', done = false, llm = 'augmentation' }
+    ]
+  }

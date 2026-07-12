@@ -69,18 +69,46 @@ export def fetch-d2 []: nothing -> oneof<nothing, string> {
   }
 }
 
+# Install the repository's `tasks` package globally with `nupm`.
+#
+# Runs iff nupm manages this machine ($env.NUPM_HOME is set to an existing
+# directory); otherwise it logs the skip and returns. The nupm module loads in
+# a child interpreter from $env.NUPM_HOME/modules, so the parse-time import
+# cannot break environments without nupm.
+export def nupm-tasks []: nothing -> nothing {
+  # An unset home must not fall through: '' resolves to the current directory.
+  let home: any = $env.NUPM_HOME?
+  if $home == null or ($home | path type) != dir {
+    log info 'setup.nupm-tasks skipped ($env.NUPM_HOME is not an existing directory)'
+    return
+  }
+  let install: record = do {
+    ^$nu.current-exe --no-config-file ...[
+      --include-path ($home | path join modules)
+      --commands $"use nupm; nupm install --path ($ROOT | path join scripts tasks | to nuon) --force --no-confirm"
+    ]
+  } | complete
+  if $install.exit_code != 0 {
+    error make --unspanned $"`nupm install` did not succeed:\n($install.stderr)"
+  }
+
+  log info $"(ansi g)setup.nupm-tasks done(ansi rst)"
+}
+
 # Run a selection of the setup functions.
 export def main [
   ...subcommands: string@_empty # Spread list of subcommands to execute
   --git-hooks # Configure the Git hooks
   --site-gen # Run the SSG (+dependencies) installer
   --fetch-d2 # Curl and run the d2 installer
+  --nupm-tasks # Install the `tasks` package globally with nupm
 ]: nothing -> nothing {
-  let run: list = $subcommands | default --empty [git-hooks site-gen]
+  let run: list = $subcommands | default --empty [git-hooks site-gen nupm-tasks]
   alias is-enabled = do {|name: string| $run has $name }
   if $git_hooks or (is-enabled git-hooks) { git-hooks }
   if $site_gen or (is-enabled site-gen) { site-gen }
   if $fetch_d2 or (is-enabled fetch-d2) { fetch-d2 }
+  if $nupm_tasks or (is-enabled nupm-tasks) { nupm-tasks }
 }
 
 # Disable automatic path completions by returning an empty list.
