@@ -83,35 +83,72 @@ version = '3.0.0'
             type = 'precomputed-context'
             item = 'Generated documentation serves as reference for both myself and Claude, particularly for cross-project work where equivalent synthesis through ad hoc exploration would be costly and potentially incomplete.'
 
-[tasks]
-    [tasks.0]
-        id        = 'research-candidate-options'
-        target    = 'Catalog framework language coverage requirements.'
-        completed = false
-        subtasks  = [
-            { synopsis = 'mkdocstrings handlers', done = false, llm = 'automation' },
-            { synopsis = 'fir comment conventions', done = false, llm = 'automation' },
-            { synopsis = 'waygrounddocgen llm reliability', done = false, llm = 'augmentation' },
-        ]
+[tasks.0]
+id = "research-candidate-options"
+target = "Catalog framework language coverage requirements."
+completed = false
 
-    [tasks.1]
-        id        = 'assess-and-decide'
-        target    = 'Make the decision regarding framework usage.'
-        completed = false
-        subtasks  = [
-            { synopsis = 'catalog and synthesize research findings', done = false, llm = 'augmentation' },
-            { synopsis = 'refuse all or select framework to extend', done = false, llm = 'none' }
-        ]
+[[tasks.0.subtasks]]
+synopsis = "mkdocstrings handlers"
+llm = "automation"
+done = true
 
-    [tasks.2]
-        id        = 'complete-madr-template'
-        target    = 'Author the ADR; fill the MADR template fields.'
-        completed = false
-        subtasks  = [
-            { synopsis = 'decision drivers', done = false, llm = 'none' },
-            { synopsis = 'considered options', done = false, llm = 'none' },
-            { synopsis = 'decision outcome - consequences', done = false, llm = 'none' },
-            { synopsis = 'decision outcome - confirmation', done = false, llm = 'none' },
-            { synopsis = 'pros and cons of alternatives', done = false, llm = 'none' },
-            { synopsis = 'more information', done = false, llm = 'none' }
-        ]
+[[tasks.0.subtasks]]
+synopsis = "fir comment conventions"
+llm = "automation"
+done = false
+
+[[tasks.0.subtasks]]
+synopsis = "waygrounddocgen llm reliability"
+llm = "augmentation"
+done = false
+
+[tasks.1]
+id = "assess-and-decide"
+target = "Make the decision regarding framework usage."
+completed = false
+
+[[tasks.1.subtasks]]
+synopsis = "catalog and synthesize research findings"
+done = false
+llm = "augmentation"
+
+[[tasks.1.subtasks]]
+synopsis = "refuse all or select framework to extend"
+done = false
+llm = "none"
+
+[tasks.2]
+id = "complete-madr-template"
+target = "Author the ADR; fill the MADR template fields."
+completed = false
+
+[[tasks.2.subtasks]]
+synopsis = "decision drivers"
+done = false
+llm = "none"
+
+[[tasks.2.subtasks]]
+synopsis = "considered options"
+done = false
+llm = "none"
+
+[[tasks.2.subtasks]]
+synopsis = "decision outcome - consequences"
+done = false
+llm = "none"
+
+[[tasks.2.subtasks]]
+synopsis = "decision outcome - confirmation"
+done = false
+llm = "none"
+
+[[tasks.2.subtasks]]
+synopsis = "pros and cons of alternatives"
+done = false
+llm = "none"
+
+[[tasks.2.subtasks]]
+synopsis = "more information"
+done = false
+llm = "none"
