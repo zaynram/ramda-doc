@@ -7,7 +7,12 @@ const D2: record<url: string, pin: list> = {
   url: `https://d2lang.com/install.sh`
   pin: [--version v0.7.1]
 }
-const TASKS: string = 'https://github.com/zaynram/nushell-tasks.git'
+const REGISTRY: record<scheme: string, host: string, path: string> = {
+  scheme: https
+  host: raw.githubusercontent.com
+  path: /zaynram/nupm-registry/main/registry.nuon
+}
+const MODULES: list<string> = [issue tasks]
 
 # Configure the project's local Git hooks.
 export def git-hooks []: nothing -> nothing {
@@ -83,16 +88,26 @@ export def nupm-tasks []: nothing -> nothing {
   if not ($env has NUPM_HOME) or ($env.NUPM_HOME | path type) != dir {
     log warning 'setup.nupm-tasks skipped; $env.NUPM_HOME is not a directory'
   } else {
-    ^$nu.current-exe --no-config-file ...[
-      --include-path
-      ($env.NUPM_HOME | path join modules)
-      --commands
-      # --no-confirm: any nupm prompt would hang invisibly in the captured child.
-      $"use nupm; nupm install --force --no-confirm --git '($TASKS)'"
-    ] out+err>|
-    | complete
-    | if $in.exit_code != 0 {
-      error make --unspanned $"`nupm install` did not succeed:\n($in.stdout?)"
+    let registry: string = $REGISTRY | url join
+    let include: path = $env.NUPM_HOME | path join modules
+    # --no-confirm: any nupm prompt would hang invisibly in the captured child.
+    let commands: string = $MODULES
+      | par-each { $"nupm install --force --no-confirm --registry=ramda-doc ($in)" }
+      | prepend 'use nupm'
+      | str join '; '
+    let temp_env = $env
+      | select --optional NUPM_REGISTRIES
+      | upsert NUPM_REGISTRIES { default {} | insert ramda-doc $registry }
+    with-env $temp_env {
+      ^$nu.current-exe ...[
+        --no-config-file
+        --include-path=($include)
+        --commands=($commands)
+      ] out+err>|
+      | complete
+      | if $in.exit_code != 0 {
+        error make --unspanned $"`nupm install` did not succeed:\n($in.stdout?)"
+      }
     }
     log info $"(ansi g)setup.nupm-tasks done(ansi rst)"
   }
