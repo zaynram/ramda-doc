@@ -3,7 +3,7 @@
     "$id": "https://zaynram.github.io/ramda-doc/schema/issue.schema.json",
     "title": "Problem Awareness - Issue Schema",
     "description": "Vision and value definition for a work item, articulated prior to any decision or implementation work.",
-    "oneOf": [
+    "anyOf": [
         {
             "type": "object",
             "required": ["version", "issue"],
