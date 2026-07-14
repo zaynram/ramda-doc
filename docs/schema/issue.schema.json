@@ -3,7 +3,7 @@
     "$id": "https://zaynram.github.io/ramda-doc/schema/issue.schema.json",
     "title": "Problem Awareness - Issue Schema",
     "description": "Vision and value definition for a work item, articulated prior to any decision or implementation work.",
-    "anyOf": [
+    "oneOf": [
         {
             "type": "object",
             "required": ["version", "issue"],
@@ -200,7 +200,7 @@
                                     "type": { "const": "brownfield" },
                                     "reference": {
                                         "description": "Path or descriptive reference of this surface's prior state existence (where it can be found).",
-                                        "oneOf": [
+                                        "anyOf": [
                                             {
                                                 "$ref": "#/$defs/path",
                                                 "description": "The location of the surface's prior state existence in the local filesystem."
